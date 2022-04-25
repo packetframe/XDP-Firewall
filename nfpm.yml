@@ -1,0 +1,21 @@
+name: "xdpfw"
+arch: "amd64"
+platform: "linux"
+version: "v0.0.0"
+section: "default"
+priority: "extra"
+maintainer: "Nate Sales <nate@packetframe.com>"
+description: "XDP Firewall"
+vendor: "Packetframe"
+homepage: "https://github.com/packetframe/XDP-Firewall"
+license: ""
+contents:
+  - src: ./build/xdpfw
+    dst: /usr/local/bin/xdpfw
+  - src: ./build/xdpfw_kern.o
+    dst: /etc/xdpfw/xdpfw_kern.o
+  - src: ./other/xdpfw.service
+    dst: /etc/systemd/system/xdpfw.service
+  - src: ./xdpfw.conf.example
+    dst: /etc/xdpfw/xdpfw.conf
+    type: config

@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - run: sudo apt update
+    - run: sudo apt install -y clang libelf-dev libconfig-dev llvm
+    - run: make
+    - name: Set package version
+      run: |
+        VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+        sed -i "s/v0.0.0/$VERSION/" nfpm.yml
+    - name: Build package
+      run: nfpm package --packager deb --config nfpm.yml
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: xdpfw_*_amd64.deb
